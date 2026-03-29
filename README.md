@@ -106,9 +106,10 @@ python app.py
 ---
 
 ## 👨‍💻 Developer
-**Your Name**  
-B.Tech CSE | [Your College Name]  
-📧 your.email@gmail.com
+**Khushi Agarwal**  
+B.Tech ENC | Thapar University  
+📧 khushiagarwalbly@gmail.com
+📧 kagarwal1_be23@thapar.edu
 
 ---
 
