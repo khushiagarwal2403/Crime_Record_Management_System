@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h4><i class="fas fa-user-secret"></i> &nbsp;CRIMINAL RECORDS</h4>
+        <p>Registered criminals database — Confidential</p>
+    </div>
+</div>
+
+<form method="GET">
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" name="search"
+               placeholder="Search by name, status, address or fingerprint ID..."
+               value="{{ search }}">
+        <button type="submit" class="btn btn-blue">
+            <i class="fas fa-search"></i> Search
+        </button>
+    </div>
+</form>
+
+<div class="card">
+    <div class="card-head">
+    <span><i class="fas fa-database"></i> &nbsp;CRIMINAL DATABASE</span>
+    <div class="card-actions">
+        <a href="/criminals/add" class="btn btn-gold">
+            <i class="fas fa-plus"></i> ADD CRIMINAL
+        </a>
+        <span class="small" style="opacity:0.65; font-weight:400;">CONFIDENTIAL</span>
+    </div>
+</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th><th>Full Name</th><th>Date of Birth</th>
+                <th>Gender</th><th>Last Known Address</th><th>Fingerprint ID</th><th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in criminals %}
+            <tr>
+                <td class="td-id">{{ c.criminal_id }}</td>
+                <td class="td-name">{{ c.name }}</td>
+                <td>{{ c.dob }}</td>
+                <td>{{ c.gender }}</td>
+                <td>{{ c.address }}</td>
+                <td><span class="td-code">{{ c.fingerprint_id }}</span></td>
+                <td>
+                    {% if c.status == 'Wanted' %}<span class="badge badge-wanted">⚠ Wanted</span>
+                    {% elif c.status == 'Arrested' %}<span class="badge badge-arrested">Arrested</span>
+                    {% else %}<span class="badge badge-convicted">Convicted</span>{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

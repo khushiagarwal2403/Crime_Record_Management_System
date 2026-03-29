@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIR Export Report — CRMS</title>
+    <style>
+        * { font-family: Arial, sans-serif; font-size: 11px; margin: 0; padding: 0; box-sizing: border-box; }
+        body { margin: 25px; color: #111; }
+        .export-header { text-align: center; border-bottom: 2px solid #003087; padding-bottom: 14px; margin-bottom: 18px; }
+        .export-header .flag { font-size: 28px; margin-bottom: 4px; }
+        .export-header h2 { color: #003087; font-size: 13px; letter-spacing: 1.5px; margin: 4px 0 2px; }
+        .export-header .sub { color: #666; font-size: 9px; letter-spacing: 0.5px; }
+        .confidential { display: inline-block; color: #b71c1c; font-size: 8.5px; font-weight: 700; letter-spacing: 2px; border: 1px solid #b71c1c; padding: 2px 10px; margin: 7px 0 4px; }
+        .gen-info { color: #999; font-size: 9px; margin-top: 5px; }
+        .print-btn { background: #003087; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; }
+        thead th { background: #003087; color: white; padding: 8px 10px; text-align: left; font-size: 9px; letter-spacing: 0.8px; text-transform: uppercase; }
+        tbody td { padding: 7px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+        tbody tr:nth-child(even) { background: #f5f8ff; }
+        .s-open   { color: #b71c1c; font-weight: 700; }
+        .s-inv    { color: #e65100; font-weight: 700; }
+        .s-closed { color: #1b5e20; font-weight: 700; }
+        @media print { .no-print { display: none !important; } }
+    </style>
+</head>
+<body>
+<div class="export-header">
+    <div class="flag">🇮🇳</div>
+    <h2>CRIME RECORD MANAGEMENT SYSTEM</h2>
+    <div class="sub">GOVERNMENT OF INDIA | MINISTRY OF HOME AFFAIRS | POLICE DEPARTMENT</div>
+    <div class="confidential">CONFIDENTIAL — FOR OFFICIAL USE ONLY</div>
+    <div class="gen-info">FIR RECORDS REPORT &nbsp;|&nbsp; Generated: <strong id="gendate"></strong></div>
+</div>
+<div class="no-print" style="margin-bottom:14px;">
+    <button class="print-btn" onclick="window.print()">🖨️ &nbsp; Print / Save as PDF</button>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>FIR No.</th><th>Date</th><th>Time</th><th>Crime Type</th>
+            <th>Location</th><th>Victim</th><th>Officer (Rank)</th><th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for f in firs %}
+        <tr>
+            <td><strong>#{{ f.fir_id }}</strong></td>
+            <td>{{ f.date }}</td><td>{{ f.time }}</td>
+            <td>{{ f.crime_type }}</td><td>{{ f.location }}</td>
+            <td>{{ f.victim_name }}</td>
+            <td>{{ f.officer_name }} ({{ f.officer_rank }})</td>
+            <td>
+                {% if f.status == 'Closed' %}<span class="s-closed">CLOSED</span>
+                {% elif f.status == 'Under Investigation' %}<span class="s-inv">INVESTIGATING</span>
+                {% else %}<span class="s-open">OPEN</span>{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    document.getElementById('gendate').textContent = new Date().toLocaleString('en-IN');
+</script>
+</body>
+</html>

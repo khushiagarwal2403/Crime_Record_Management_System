@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h4><i class="fas fa-tachometer-alt me-2"></i>DASHBOARD OVERVIEW</h4>
+        <p>Real-time crime statistics and recent activity</p>
+    </div>
+    <span style="font-size:0.75rem; color:#666;">
+        <i class="fas fa-user me-1"></i>
+        Logged in as <strong>{{ session['user'] }}</strong>
+        ({{ session['role'] }})
+    </span>
+</div>
+
+<!-- Stat Cards Row 1 -->
+<div class="row">
+    <div class="col-md-2">
+        <div class="stat-card blue">
+            <div class="stat-info">
+                <h6>Total FIRs</h6>
+                <h2>{{ total_fir }}</h2>
+            </div>
+            <div class="stat-icon"><i class="fas fa-file-alt" style="color:#003087; opacity:1;"></i></div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card red">
+            <div class="stat-info">
+                <h6>Wanted</h6>
+                <h2>{{ wanted }}</h2>
+            </div>
+            <div class="stat-icon"><i class="fas fa-user-secret" style="color:#c62828; opacity:1;"></i></div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card green">
+            <div class="stat-info">
+                <h6>Solved</h6>
+                <h2>{{ solved }}</h2>
+            </div>
+            <div class="stat-icon"><i class="fas fa-check-circle" style="color:#1b5e20; opacity:1;"></i></div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card orange">
+            <div class="stat-info">
+                <h6>Investigating</h6>
+                <h2>{{ investigating }}</h2>
+            </div>
+            <div class="stat-icon"><i class="fas fa-search" style="color:#e65100; opacity:1;"></i></div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card blue">
+            <div class="stat-info">
+                <h6>Open Cases</h6>
+                <h2>{{ open_cases }}</h2>
+            </div>
+            <div class="stat-icon"><i class="fas fa-folder-open" style="color:#003087; opacity:1;"></i></div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="stat-card green">
+            <div class="stat-info">
+                <h6>Officers</h6>
+                <h2>{{ total_officers }}</h2>
+            </div>
+            <div class="stat-icon"><i class="fas fa-user-shield" style="color:#1b5e20; opacity:1;"></i></div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <span><i class="fas fa-chart-pie me-2"></i>CRIMES BY TYPE</span>
+            </div>
+            <div style="padding:20px;">
+                <canvas id="crimeTypeChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <span><i class="fas fa-chart-bar me-2"></i>MONTHLY CRIME TREND</span>
+            </div>
+            <div style="padding:20px;">
+                <canvas id="monthlyChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent FIRs -->
+<div class="content-card">
+    <div class="card-header-custom">
+        <span><i class="fas fa-clock me-2"></i>RECENTLY REGISTERED FIRs</span>
+        <a href="/fir" style="color:#ffc107; font-size:0.8rem;">View All →</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>FIR No.</th>
+                <th>Date</th>
+                <th>Crime Type</th>
+                <th>Location</th>
+                <th>Victim</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in recent_firs %}
+            <tr>
+                <td><strong>#{{ f.fir_id }}</strong></td>
+                <td>{{ f.date }}</td>
+                <td>{{ f.crime_type }}</td>
+                <td>{{ f.location }}</td>
+                <td>{{ f.victim_name }}</td>
+                <td>
+                    {% if f.status == 'Closed' %}
+                        <span class="status-badge badge-closed">Closed</span>
+                    {% elif f.status == 'Under Investigation' %}
+                        <span class="status-badge badge-investigating">Investigating</span>
+                    {% else %}
+                        <span class="status-badge badge-open">Open</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Crime Type Pie Chart
+const crimeLabels = [{% for s in crime_stats %}"{{ s.crime_type }}",{% endfor %}];
+const crimeData   = [{% for s in crime_stats %}{{ s.total }},{% endfor %}];
+
+new Chart(document.getElementById('crimeTypeChart'), {
+    type: 'doughnut',
+    data: {
+        labels: crimeLabels,
+        datasets: [{
+            data: crimeData,
+            backgroundColor: [
+                '#003087','#c62828','#1b5e20',
+                '#e65100','#1565c0','#4a148c'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'bottom', labels: { font: { size: 11 } } }
+        }
+    }
+});
+
+// Monthly Bar Chart
+const monthLabels = [{% for m in monthly_stats %}"{{ m.month }}",{% endfor %}];
+const monthData   = [{% for m in monthly_stats %}{{ m.total }},{% endfor %}];
+
+new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+        labels: monthLabels,
+        datasets: [{
+            label: 'FIRs Registered',
+            data: monthData,
+            backgroundColor: '#003087',
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+    }
+});
+</script>
+{% endblock %}

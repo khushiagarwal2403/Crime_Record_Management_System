@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h4><i class="fas fa-user-plus"></i> &nbsp;ADD CRIMINAL RECORD</h4>
+        <p>Register new criminal in the database</p>
+    </div>
+    <a href="/criminals" class="btn btn-blue">
+        <i class="fas fa-arrow-left"></i> Back to Criminals
+    </a>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> {{ message }}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+<div class="card">
+    <div class="card-head">
+        <span><i class="fas fa-user-secret"></i> &nbsp;CRIMINAL DETAILS</span>
+        <span class="small" style="opacity:0.7; font-weight:400;">ALL FIELDS REQUIRED</span>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+
+            <div class="form-grid-3">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name"
+                           placeholder="Enter full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" required>
+                        <option value="">-- Select Gender --</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label>Last Known Address</label>
+                    <textarea name="address"
+                              placeholder="Enter full address..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Additional Details</label>
+                    <div class="form-group">
+                        <label>Fingerprint ID</label>
+                        <input type="text" name="fingerprint_id"
+                               placeholder="e.g. FP10001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Current Status</label>
+                        <select name="status" required>
+                            <option value="">-- Select Status --</option>
+                            <option value="Wanted">Wanted</option>
+                            <option value="Arrested">Arrested</option>
+                            <option value="Convicted">Convicted</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <a href="/criminals" class="btn btn-grey">Cancel</a>
+                <button type="submit" class="btn btn-blue">
+                    <i class="fas fa-save"></i> ADD CRIMINAL RECORD
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

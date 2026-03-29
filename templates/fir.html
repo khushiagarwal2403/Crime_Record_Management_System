@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h4><i class="fas fa-file-alt"></i> &nbsp;FIR RECORDS</h4>
+        <p>First Information Report — Complete Registry</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-head">
+        <span><i class="fas fa-list"></i> &nbsp;ALL REGISTERED FIRs</span>
+        <div class="card-actions">
+            <a href="/fir/add" class="btn btn-gold"><i class="fas fa-plus"></i> ADD FIR</a>
+            <a href="/export/fir" target="_blank" class="btn btn-green"><i class="fas fa-file-export"></i> EXPORT PDF</a>
+        </div>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>FIR No.</th><th>Date</th><th>Crime Type</th>
+                <th>Location</th><th>Victim</th><th>Officer</th><th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in firs %}
+            <tr>
+                <td class="td-id">#{{ f.fir_id }}</td>
+                <td>{{ f.date }}</td>
+                <td>{{ f.crime_type }}</td>
+                <td>{{ f.location }}</td>
+                <td class="td-name">{{ f.victim_name }}</td>
+                <td>{{ f.officer_name }}</td>
+                <td>
+                    {% if f.status == 'Closed' %}<span class="badge badge-closed">Closed</span>
+                    {% elif f.status == 'Under Investigation' %}<span class="badge badge-investigating">Investigating</span>
+                    {% else %}<span class="badge badge-open">Open</span>{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

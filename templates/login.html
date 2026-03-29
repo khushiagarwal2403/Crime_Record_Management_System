@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login — CRMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">
+
+<div class="login-topbar">
+    Government of India &nbsp;|&nbsp; Ministry of Home Affairs &nbsp;|&nbsp; Police Department
+</div>
+
+<div class="login-center">
+    <div class="login-card">
+        <div class="login-card-head">
+            <div class="login-shield">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2>CRIME RECORD MANAGEMENT SYSTEM</h2>
+            <p>AUTHORIZED ACCESS ONLY — ENTER YOUR CREDENTIALS</p>
+        </div>
+        <div class="login-card-body">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="alert alert-error">
+                        <i class="fas fa-exclamation-circle"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endwith %}
+            <div class="login-hint">
+                <strong><i class="fas fa-info-circle"></i> Demo Credentials</strong>
+                Admin &nbsp;— <code>admin</code> / <code>admin123</code><br>
+                Officer — <code>gurpreet</code> / <code>officer123</code>
+            </div>
+            <form method="POST">
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-row">
+                        <div class="input-icon"><i class="fas fa-user"></i></div>
+                        <input type="text" name="username" placeholder="Enter your username" required autofocus>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-row">
+                        <div class="input-icon"><i class="fas fa-lock"></i></div>
+                        <input type="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> SECURE LOGIN
+                </button>
+            </form>
+        </div>
+        <div class="login-card-foot">
+            Confidential — For Authorized Personnel Only
+        </div>
+    </div>
+</div>
+</body>
+</html>

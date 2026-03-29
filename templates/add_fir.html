@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h4><i class="fas fa-plus-circle"></i> &nbsp;REGISTER NEW FIR</h4>
+        <p>First Information Report — New Entry</p>
+    </div>
+    <a href="/fir" class="btn btn-blue"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ message }}</div>
+    {% endfor %}
+{% endwith %}
+
+<div class="card">
+    <div class="card-head">
+        <span><i class="fas fa-file-alt"></i> &nbsp;FIR DETAILS</span>
+        <span class="small" style="opacity:0.7; font-weight:400;">ALL FIELDS REQUIRED</span>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="form-grid-3">
+                <div class="form-group">
+                    <label>Date of Incident</label>
+                    <input type="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Time of Incident</label>
+                    <input type="time" name="time" required>
+                </div>
+                <div class="form-group">
+                    <label>Crime Type</label>
+                    <select name="crime_type" required>
+                        <option value="">-- Select Crime Type --</option>
+                        <option>Robbery</option><option>Assault</option>
+                        <option>Murder</option><option>Theft</option>
+                        <option>Kidnapping</option><option>Fraud</option>
+                        <option>Cybercrime</option><option>Drug Trafficking</option>
+                        <option>Burglary</option><option>Eve Teasing</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-grid-3">
+                <div class="form-group">
+                    <label>Location of Incident</label>
+                    <input type="text" name="location" placeholder="Full address / landmark" required>
+                </div>
+                <div class="form-group">
+                    <label>Victim</label>
+                    <select name="victim_id" required>
+                        <option value="">-- Select Victim --</option>
+                        {% for v in victims %}
+                        <option value="{{ v.victim_id }}">{{ v.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Investigating Officer</label>
+                    <select name="officer_id" required>
+                        <option value="">-- Select Officer --</option>
+                        {% for o in officers %}
+                        <option value="{{ o.officer_id }}">{{ o.name }} ({{ o.rank }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description of Incident</label>
+                <textarea name="description" placeholder="Describe the incident in detail..." required></textarea>
+            </div>
+            <div class="form-footer">
+                <a href="/fir" class="btn btn-grey">Cancel</a>
+                <button type="submit" class="btn btn-blue">
+                    <i class="fas fa-save"></i> REGISTER FIR
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

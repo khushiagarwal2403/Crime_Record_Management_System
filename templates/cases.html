@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h4><i class="fas fa-gavel"></i> &nbsp;COURT CASES</h4>
+        <p>Judicial proceedings and verdict records</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-head">
+        <span><i class="fas fa-balance-scale"></i> &nbsp;CASE PROCEEDINGS</span>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Case No.</th><th>Crime Type</th><th>Victim</th>
+                <th>Presiding Judge</th><th>Hearing Date</th><th>Verdict</th><th>Sentence</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in cases %}
+            <tr>
+                <td class="td-id">#{{ c.case_id }}</td>
+                <td>{{ c.crime_type }}</td>
+                <td class="td-name">{{ c.victim_name }}</td>
+                <td>{{ c.judge_name }}</td>
+                <td>{{ c.hearing_date }}</td>
+                <td>
+                    {% if c.verdict == 'Guilty' %}<span class="badge badge-guilty">Guilty</span>
+                    {% elif c.verdict == 'Pending' %}<span class="badge badge-pending">Pending</span>
+                    {% else %}<span class="badge badge-closed">{{ c.verdict }}</span>{% endif %}
+                </td>
+                <td class="text-muted">{{ c.sentence or '—' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

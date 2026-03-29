@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h4><i class="fas fa-user-plus"></i> &nbsp;ADD OFFICER RECORD</h4>
+        <p>Register new police officer in the system</p>
+    </div>
+    <a href="/officers" class="btn btn-blue">
+        <i class="fas fa-arrow-left"></i> Back to Officers
+    </a>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> {{ message }}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+<div class="card">
+    <div class="card-head">
+        <span><i class="fas fa-user-shield"></i> &nbsp;OFFICER DETAILS</span>
+        <span class="small" style="opacity:0.7; font-weight:400;">ALL FIELDS REQUIRED</span>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+
+            <div class="form-grid-3">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name"
+                           placeholder="Enter full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Rank</label>
+                    <select name="rank" required>
+                        <option value="">-- Select Rank --</option>
+                        <option value="Inspector">Inspector</option>
+                        <option value="Sub-Inspector">Sub-Inspector</option>
+                        <option value="Constable">Constable</option>
+                        <option value="Senior Inspector">Senior Inspector</option>
+                        <option value="Deputy SP">Deputy SP</option>
+                        <option value="SP">SP (Superintendent)</option>
+                        <option value="DSP">DSP</option>
+                        <option value="ASI">ASI (Asst. Sub-Inspector)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Badge Number</label>
+                    <input type="text" name="badge_no"
+                           placeholder="e.g. UP3099" required>
+                </div>
+            </div>
+
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label>Assigned Police Station</label>
+                    <select name="station_id" required>
+                        <option value="">-- Select Station --</option>
+                        {% for s in stations %}
+                        <option value="{{ s.station_id }}">
+                            {{ s.name }} — {{ s.district }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="text" name="contact"
+                           placeholder="e.g. 9876500099"
+                           maxlength="15" required>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <a href="/officers" class="btn btn-grey">Cancel</a>
+                <button type="submit" class="btn btn-blue">
+                    <i class="fas fa-save"></i> ADD OFFICER RECORD
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h4><i class="fas fa-user-shield"></i> &nbsp;OFFICER RECORDS</h4>
+        <p>Police department personnel registry</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-head">
+        <span><i class="fas fa-id-badge"></i> &nbsp;PERSONNEL DIRECTORY</span>
+        <a href="/officers/add" class="btn btn-gold">
+        <i class="fas fa-plus"></i> ADD OFFICER
+        </a>
+    </div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Officer ID</th><th>Full Name</th><th>Rank</th>
+                <th>Badge No.</th><th>Station</th><th>District</th><th>Contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for o in officers %}
+            <tr>
+                <td class="td-id">{{ o.officer_id }}</td>
+                <td class="td-name">{{ o.name }}</td>
+                <td class="td-rank">{{ o.rank }}</td>
+                <td><span class="td-code">{{ o.badge_no }}</span></td>
+                <td>{{ o.station_name }}</td>
+                <td>{{ o.district }}</td>
+                <td>{{ o.contact }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
