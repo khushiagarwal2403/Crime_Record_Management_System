@@ -6,7 +6,7 @@ designed to simulate real-world police department operations.
 ---
 
 ## 🌐 Live Demo
-🔗 [Coming Soon - Deploying on PythonAnywhere]
+🔗 crimerecordmanagementsystem-production.up.railway.app
 
 ---
 
