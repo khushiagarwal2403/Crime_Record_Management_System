@@ -41,7 +41,7 @@ def login():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("""
-            SELECT * FROM users WHERE username=%s AND password=%s
+            SELECT * FROM users u WHERE u.username=%s AND u.password=%s
         """, (username, password))
         user = cursor.fetchone()
         conn.close()
@@ -71,16 +71,16 @@ def index():
     cursor.execute("SELECT COUNT(*) AS total FROM fir")
     total_fir = cursor.fetchone()['total']
 
-    cursor.execute("SELECT COUNT(*) AS total FROM criminal WHERE status='Wanted'")
+    cursor.execute("SELECT COUNT(*) AS total FROM criminal c WHERE c.status='Wanted'")
     wanted = cursor.fetchone()['total']
 
-    cursor.execute("SELECT COUNT(*) AS total FROM fir WHERE status='Closed'")
+    cursor.execute("SELECT COUNT(*) AS total FROM fir f WHERE f.status='Closed'")
     solved = cursor.fetchone()['total']
 
-    cursor.execute("SELECT COUNT(*) AS total FROM fir WHERE status='Under Investigation'")
+    cursor.execute("SELECT COUNT(*) AS total FROM fir f WHERE f.status='Under Investigation'")
     investigating = cursor.fetchone()['total']
 
-    cursor.execute("SELECT COUNT(*) AS total FROM fir WHERE status='Open'")
+    cursor.execute("SELECT COUNT(*) AS total FROM fir f WHERE f.status='Open'")
     open_cases = cursor.fetchone()['total']
 
     cursor.execute("SELECT COUNT(*) AS total FROM officer")
@@ -88,18 +88,18 @@ def index():
 
     # Chart data - crimes by type
     cursor.execute("""
-        SELECT crime_type, COUNT(*) as total 
-        FROM fir GROUP BY crime_type 
+        SELECT f.crime_type, COUNT(*) as total 
+        FROM fir f GROUP BY f.crime_type 
         ORDER BY total DESC LIMIT 6
     """)
     crime_stats = cursor.fetchall()
 
     # Chart data - monthly crimes
     cursor.execute("""
-        SELECT MONTHNAME(date) as month, COUNT(*) as total
-        FROM fir 
-        GROUP BY MONTH(date), MONTHNAME(date)
-        ORDER BY MONTH(date)
+        SELECT MONTHNAME(f.date) as month, COUNT(*) as total
+        FROM fir f
+        GROUP BY MONTH(f.date), MONTHNAME(f.date)
+        ORDER BY MONTH(f.date)
     """)
     monthly_stats = cursor.fetchall()
 
@@ -163,13 +163,13 @@ def add_fir():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     if request.method == 'POST':
-        date = request.form['date']
-        time = request.form['time']
-        location = request.form['location']
-        crime_type = request.form['crime_type']
+        date        = request.form['date']
+        time        = request.form['time']
+        location    = request.form['location']
+        crime_type  = request.form['crime_type']
         description = request.form['description']
-        victim_id = request.form['victim_id']
-        officer_id = request.form['officer_id']
+        victim_id   = request.form['victim_id']
+        officer_id  = request.form['officer_id']
         cursor.execute("""
             INSERT INTO fir(date, time, location, crime_type, description, status, victim_id, officer_id)
             VALUES(%s, %s, %s, %s, %s, 'Open', %s, %s)
@@ -179,9 +179,9 @@ def add_fir():
         flash('FIR registered successfully!', 'success')
         return redirect(url_for('fir_list'))
 
-    cursor.execute("SELECT victim_id, name FROM victim ORDER BY name")
+    cursor.execute("SELECT v.victim_id, v.name FROM victim v ORDER BY v.name")
     victims = cursor.fetchall()
-    cursor.execute("SELECT officer_id, name, rank FROM officer ORDER BY name")
+    cursor.execute("SELECT o.officer_id, o.name, o.`rank` FROM officer o ORDER BY o.name")
     officers = cursor.fetchall()
     conn.close()
     return render_template('add_fir.html', victims=victims, officers=officers)
@@ -197,14 +197,14 @@ def criminals_list():
     search = request.args.get('search', '')
     if search:
         cursor.execute("""
-            SELECT * FROM criminal
-            WHERE name LIKE %s
-            OR status LIKE %s
-            OR address LIKE %s
-            OR fingerprint_id LIKE %s
+            SELECT * FROM criminal c
+            WHERE c.name LIKE %s
+            OR c.status LIKE %s
+            OR c.address LIKE %s
+            OR c.fingerprint_id LIKE %s
         """, ('%'+search+'%','%'+search+'%','%'+search+'%','%'+search+'%'))
     else:
-        cursor.execute("SELECT * FROM criminal ORDER BY criminal_id")
+        cursor.execute("SELECT * FROM criminal c ORDER BY c.criminal_id")
     criminals = cursor.fetchall()
     conn.close()
     return render_template('criminals.html', criminals=criminals, search=search)
@@ -241,7 +241,7 @@ def officers_list():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT o.officer_id, o.name, o.rank, o.badge_no,
+        SELECT o.officer_id, o.name, o.`rank`, o.badge_no,
                o.contact, s.name as station_name, s.district
         FROM officer o
         JOIN station s ON o.station_id = s.station_id
@@ -263,14 +263,14 @@ def add_officer():
         station_id = request.form['station_id']
         contact    = request.form['contact']
         cursor.execute("""
-            INSERT INTO officer(name, rank, badge_no, station_id, contact)
+            INSERT INTO officer(name, `rank`, badge_no, station_id, contact)
             VALUES(%s, %s, %s, %s, %s)
         """, (name, rank, badge_no, station_id, contact))
         conn.commit()
         conn.close()
         flash('Officer added successfully!', 'success')
         return redirect(url_for('officers_list'))
-    cursor.execute("SELECT station_id, name, district FROM station ORDER BY name")
+    cursor.execute("SELECT s.station_id, s.name, s.district FROM station s ORDER BY s.name")
     stations = cursor.fetchall()
     conn.close()
     return render_template('add_officer.html', stations=stations)
@@ -309,7 +309,7 @@ def export_fir():
         SELECT f.fir_id, f.date, f.time, f.crime_type, f.location,
                f.description, f.status,
                v.name as victim_name, v.contact as victim_contact,
-               o.name as officer_name, o.rank as officer_rank
+               o.name as officer_name, o.`rank` as officer_rank
         FROM fir f
         JOIN victim v ON f.victim_id = v.victim_id
         JOIN officer o ON f.officer_id = o.officer_id
