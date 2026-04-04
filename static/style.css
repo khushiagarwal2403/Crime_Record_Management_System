@@ -706,3 +706,234 @@ body {
 .small      { font-size: 0.75rem; }
 
 @media print { .no-print { display: none !important; } }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — ALL SCREEN SIZES
+══════════════════════════════════════════ */
+
+/* ── HAMBURGER MENU BUTTON ── */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 1100;
+}
+
+.hamburger span {
+    display: block;
+    width: 24px;
+    height: 2.5px;
+    background: var(--gold);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ── OVERLAY for mobile sidebar ── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 998;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* ══════════════════════════════════════════
+   LARGE DESKTOP (1200px+)
+══════════════════════════════════════════ */
+@media (min-width: 1200px) {
+    .main-content { padding: 28px 32px; }
+    .stat-value { font-size: 2.1rem; }
+}
+
+/* ══════════════════════════════════════════
+   TABLET LANDSCAPE (992px - 1199px)
+══════════════════════════════════════════ */
+@media (max-width: 1199px) {
+    :root { --sidebar-w: 200px; }
+
+    .header-titles h1 { font-size: 0.82rem; }
+    .header-titles p  { font-size: 0.55rem; }
+
+    .stat-value { font-size: 1.7rem; }
+    .data-table { font-size: 0.78rem; }
+    .data-table thead th { font-size: 0.62rem; }
+    .data-table tbody td { padding: 8px 10px; }
+}
+
+/* ══════════════════════════════════════════
+   TABLET PORTRAIT (768px - 991px)
+══════════════════════════════════════════ */
+@media (max-width: 991px) {
+    :root {
+        --sidebar-w: 235px;
+        --header-h: 56px;
+    }
+
+    /* Show hamburger */
+    .hamburger { display: flex; }
+
+    /* Hide sidebar by default on tablet */
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        top: var(--header-h);
+        z-index: 999;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* Full width content */
+    .main-content {
+        margin-left: 0;
+        padding: 18px;
+    }
+
+    .site-footer { margin-left: 0; }
+
+    /* Header adjustments */
+    .header-titles p { display: none; }
+    .header-titles h1 { font-size: 0.78rem; letter-spacing: 0.8px; }
+
+    .system-status { display: none; }
+
+    /* Stat cards - 3 per row */
+    .col-md-2 { width: 33.333%; }
+
+    /* Charts full width */
+    .col-md-6 { width: 100%; }
+
+    /* Form grids */
+    .form-grid-3 { grid-template-columns: 1fr 1fr; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+
+    /* Page header */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* ══════════════════════════════════════════
+   MOBILE LARGE (576px - 767px)
+══════════════════════════════════════════ */
+@media (max-width: 767px) {
+    :root { --header-h: 54px; }
+
+    /* Header */
+    .top-header { padding: 0 14px; }
+    .header-titles h1 { font-size: 0.7rem; letter-spacing: 0.5px; }
+    .header-logo gap { gap: 8px; }
+    .header-emblem { width: 36px; height: 36px; }
+    .header-emblem i { font-size: 1.1rem; }
+
+    /* User info simplified */
+    .header-user .user-name { font-size: 0.72rem; }
+    .header-user .header-time { display: none; }
+    .role-pill { display: none; }
+
+    /* Logout button smaller */
+    .btn-logout { padding: 5px 10px; font-size: 0.68rem; }
+    .btn-logout span { display: none; }
+
+    /* Main content */
+    .main-content { padding: 14px; margin-top: var(--header-h); }
+
+    /* Stat cards - 2 per row */
+    .col-md-2 { width: 50%; }
+    .stat-card { padding: 12px 14px; margin-bottom: 12px; }
+    .stat-value { font-size: 1.5rem; }
+    .stat-label { font-size: 0.58rem; }
+    .stat-icon { font-size: 1.3rem; }
+
+    /* Cards */
+    .card-head { padding: 9px 14px; font-size: 0.7rem; }
+    .card-actions { gap: 5px; }
+
+    /* Tables - horizontal scroll */
+    .card { overflow-x: auto; }
+    .data-table { min-width: 600px; }
+    .data-table thead th { font-size: 0.6rem; padding: 8px 10px; }
+    .data-table tbody td { padding: 7px 10px; font-size: 0.76rem; }
+
+    /* Forms */
+    .form-grid-3 { grid-template-columns: 1fr; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .card-body { padding: 14px; }
+
+    /* Buttons */
+    .btn { padding: 6px 12px; font-size: 0.72rem; }
+
+    /* Search bar */
+    .search-bar { padding: 10px 12px; }
+    .search-bar input { font-size: 0.78rem; }
+
+    /* Page header */
+    .page-header { padding: 10px 14px; }
+    .page-header h4 { font-size: 0.88rem; }
+    .page-header p { font-size: 0.65rem; }
+
+    /* Charts */
+    .chart-wrap { padding: 12px; }
+
+    /* Footer */
+    .site-footer { font-size: 0.55rem; padding: 8px; }
+}
+
+/* ══════════════════════════════════════════
+   MOBILE SMALL (up to 575px)
+══════════════════════════════════════════ */
+@media (max-width: 575px) {
+    /* Stat cards - 2 per row still */
+    .col-md-2 { width: 50%; }
+    .stat-value { font-size: 1.3rem; }
+
+    /* Header - minimal */
+    .header-right { gap: 8px; }
+    .header-user { display: none; }
+
+    /* Login card */
+    .login-card { margin: 0 10px; }
+    .login-card-head { padding: 20px 16px; }
+    .login-card-head h2 { font-size: 0.78rem; }
+    .login-card-body { padding: 18px 16px; }
+
+    /* Tables */
+    .data-table { min-width: 500px; }
+}
+
+/* ══════════════════════════════════════════
+   VERY SMALL MOBILE (up to 375px)
+══════════════════════════════════════════ */
+@media (max-width: 375px) {
+    .top-header { padding: 0 10px; }
+    .header-emblem { width: 32px; height: 32px; }
+    .header-titles h1 { font-size: 0.62rem; }
+    .main-content { padding: 10px; }
+    .stat-card { padding: 10px 12px; }
+    .stat-value { font-size: 1.2rem; }
+}
